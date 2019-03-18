@@ -4,7 +4,12 @@
 
 需要注意:
 1,用int表示是否进位,技能起标志作用,又能参与计算
+
 2,别忘了最后两数相加如果进位则新增一个节点值为1的节点放到最后
+
+这道题leetcode给出的解答是:
+
+![image](https://github.com/OnlyHelloWorld/codeReferenceAnswer/blob/master/images/leetcode02.png)
 
 具体代码实现:
 ```
