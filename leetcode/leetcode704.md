@@ -1,6 +1,7 @@
 出现在:腾讯
 
 非递归二分查找   练习地址:https://leetcode-cn.com/problems/binary-search/submissions/
+
 注:练习地址中没有要求求解方法,面试中禁止使用递归
 
 简单二分操作,利用l<=r循环即可
