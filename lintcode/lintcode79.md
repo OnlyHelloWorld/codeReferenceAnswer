@@ -6,6 +6,8 @@
 这个题目比较高级的理解就是我们列出一个二维矩阵,如果相等标为1,最长的1对角线即为答案
 例如:
 
+![image](https://github.com/OnlyHelloWorld/codeReferenceAnswer/blob/master/images/lintcode79-1.png)
+
 显而易见,最长公共子串为:cad.其实到了这一步,我们应该能看出(我看不出)这是个经典的动态规划题目: 由上面的矩阵可以看出状态转移方程:dp[i][j]有A.length()+1行,B.length()+1列.第一行与第一列都为0； [上面我那个矩阵列了A.length()行,B.length()列]
 ```
 dp[i][j] = dp[i-1][j-1];    A[i] == [j];
