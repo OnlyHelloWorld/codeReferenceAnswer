@@ -44,7 +44,7 @@ class Solution {
 ```
 
 2,利用堆求解(利用java优先队列)
-先来复习一下优先队列基本用法(其实最主要的是比较器,这里不赘述)
+先来复习一下优先队列基本用法(其实我们还可以重写比较器来实现大顶堆,PriorityQueue默认是小顶堆)
 ```
 import java.util.PriorityQueue;
 import java.util.Queue;
