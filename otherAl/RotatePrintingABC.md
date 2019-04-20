@@ -106,3 +106,103 @@ class PrintC implements Runnable {
 	}
 }
 ```
+
+2,使用Lock+Condition实现
+```
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Main {
+	public static void main(String[] args) {
+		PrintABCUsingCondition printABC = new PrintABCUsingCondition();
+		new Thread(() -> printABC.printA()).start();
+		new Thread(() -> printABC.printB()).start();
+		new Thread(() -> printABC.printC()).start();
+	}
+}
+
+class PrintABCUsingCondition {
+	private Lock lock = new ReentrantLock();
+	private Condition conditionA = lock.newCondition();
+	private Condition conditionB = lock.newCondition();
+	private Condition conditionC = lock.newCondition();
+	private int state = 0;
+
+	public void printA() {
+		print("A", 0, conditionA, conditionB);
+	}
+
+	public void printB() {
+		print("B", 1, conditionB, conditionC);
+	}
+
+	public void printC() {
+		print("C", 2, conditionC, conditionA);
+	}
+
+	private void print(String name, int currentState, Condition currentCondition, Condition nextCondition) {
+		for (int i = 0; i < 10;) {
+			lock.lock();
+			try {
+				while (state % 3 != currentState) {
+					currentCondition.await();
+				}
+				System.out.println(Thread.currentThread().getName() + " print " + name);
+				state++;
+				i++;
+				nextCondition.signal();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} finally {
+				lock.unlock();
+			}
+		}
+	}
+}
+```
+
+3,使用Semaphore实现
+```
+import java.util.concurrent.Semaphore;
+
+public class Main {
+	public static void main(String[] args) {
+		PrintABCUsingSemaphore printABC = new PrintABCUsingSemaphore();
+		new Thread(() -> printABC.printA()).start();
+		new Thread(() -> printABC.printB()).start();
+		new Thread(() -> printABC.printC()).start();
+	}
+}
+
+class PrintABCUsingSemaphore {
+	private Semaphore semaphoreA = new Semaphore(1);
+	private Semaphore semaphoreB = new Semaphore(0);
+	private Semaphore semaphoreC = new Semaphore(0);
+
+	public void printA() {
+		print("A", semaphoreA, semaphoreB);
+	}
+
+	public void printB() {
+		print("B", semaphoreB, semaphoreC);
+	}
+
+	public void printC() {
+		print("C", semaphoreC, semaphoreA);
+	}
+
+	private void print(String name, Semaphore currentSemaphore, Semaphore nextSemaphore) {
+		for (int i = 0; i < 10;) {
+			try {
+				currentSemaphore.acquire();
+				System.out.println(Thread.currentThread().getName() + " print " + name);
+				i++;
+				nextSemaphore.release();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+}
+```
